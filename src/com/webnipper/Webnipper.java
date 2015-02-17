@@ -3,6 +3,8 @@ package com.webnipper;
 import java.util.StringTokenizer;
 import org.apache.hadoop.util.ToolRunner;
 import org.apache.nutch.crawl.Crawl;
+import org.apache.nutch.crawl.*;
+import org.apache.hadoop.conf.*;
 import org.apache.nutch.indexer.solr.SolrIndexer;
 import org.apache.nutch.util.NutchConfiguration;
 import org.apache.solr.client.solrj.SolrQuery;
@@ -28,6 +30,27 @@ public class Webnipper {
             e.printStackTrace();
             return;
         }
+
+        CrawlDbReader dbr = new CrawlDbReader();
+        Configuration conf = NutchConfiguration.create();
+        try {
+            System.out.println("Running Nutch Stats Tool!");
+            System.out.println("**********************************");
+
+            dbr.processStatJob("/Users/jasonalexander/Dropbox/development/java/webnipper/crawl/crawldb", conf, true);
+
+           /*
+            CrawlDatum res = dbr.get("/Users/jasonalexander/Dropbox/development/java/webnipper/crawl/crawldb/current", "http://edition.cnn.com/WORLD/", conf);
+            if (res != null) {
+                System.out.println(res);
+            } else {
+                System.out.println("not found");
+            }*/
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+       /*
 
         //Run Solr Index Tool
         try {
@@ -68,7 +91,7 @@ public class Webnipper {
             e.printStackTrace();
             return;
         }
-
+          */
 
     }
 

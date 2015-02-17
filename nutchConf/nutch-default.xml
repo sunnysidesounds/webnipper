@@ -25,16 +25,6 @@
 <!-- file properties -->
 
 <property>
-  <name>file.content.limit</name>
-  <value>65536</value>
-  <description>The length limit for downloaded content using the file://
-  protocol, in bytes. If this value is nonnegative (>=0), content longer
-  than it will be truncated; otherwise, no truncation at all. Do not
-  confuse this setting with the http.content.limit setting.
-  </description>
-</property>
-  
-<property>
   <name>file.crawl.parent</name>
   <value>true</value>
   <description>The crawler is not restricted to the directories that you specified in the
@@ -42,6 +32,16 @@
     change this bahavior (set to false) the way that only directories beneath the directories that you specify get
     crawled.</description>
 </property>
+
+  <property>
+    <name>file.content.limit</name>
+    <value>65536</value>
+    <description>The length limit for downloaded content using the file://
+      protocol, in bytes. If this value is nonnegative (>=0), content longer
+      than it will be truncated; otherwise, no truncation at all. Do not
+      confuse this setting with the http.content.limit setting.
+    </description>
+  </property>
 
 <property>
   <name>file.content.ignored</name>
@@ -83,7 +83,7 @@
 
 <property>
   <name>http.agent.description</name>
-  <value></value>
+  <value>This is a web crawler</value>
   <description>Further description of our bot- this text is used in
   the User-Agent header.  It appears in parenthesis after the agent name.
   </description>
@@ -91,7 +91,7 @@
 
 <property>
   <name>http.agent.url</name>
-  <value></value>
+  <value>Testing Nutch Crawling</value>
   <description>A URL to advertise in the User-Agent header.  This will 
    appear in parenthesis after the agent name. Custom dictates that this
    should be a URL of a page explaining the purpose and behavior of this
@@ -101,7 +101,7 @@
 
 <property>
   <name>http.agent.email</name>
-  <value></value>
+  <value>sunnysidesounds@gmail.com</value>
   <description>An email address to advertise in the HTTP 'From' request
    header and User-Agent header. A good practice is to mangle this
    address (e.g. 'info at example dot com') to avoid spamming.
@@ -117,7 +117,7 @@
 
 <property>
   <name>http.agent.host</name>
-  <value></value>
+  <value>localhost</value>
   <description>Name or IP address of the host on which the Nutch crawler
   would be running. Currently this is used by 'protocol-httpclient'
   plugin.
