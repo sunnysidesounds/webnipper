@@ -5,93 +5,51 @@ import org.apache.hadoop.util.ToolRunner;
 import org.apache.nutch.crawl.Crawl;
 import org.apache.nutch.crawl.*;
 import org.apache.hadoop.conf.*;
-import org.apache.nutch.indexer.solr.SolrIndexer;
 import org.apache.nutch.util.NutchConfiguration;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.client.solrj.impl.CommonsHttpSolrServer;
+import org.apache.nutch.crawl.LinkDbReader;
 
 
 public class Webnipper {
 
+    public static String crawldbPath = "./crawl/crawldb";
+
     public static void main(String[] args) {
 
 
-        //Run Crawl Tool
-        try {
-            String crawlArg = "urls -dir crawl -threads 5 -depth 3 -topN 20";
-            System.out.println("Running Crawl Tool!");
-            System.out.println("**********************************");
-            ToolRunner.run(NutchConfiguration.create(), new Crawl(),
-                    tokenize(crawlArg));
+        //Crawl Tool
+       try {
+            String crawlArg = "urls -dir crawl -threads 5 -depth 2 -topN 20";
+            messageHeader("Nutch Crawl Tool!");
+            ToolRunner.run(NutchConfiguration.create(), new Crawl(), tokenize(crawlArg));
         } catch (Exception e) {
             e.printStackTrace();
             return;
         }
 
-        CrawlDbReader dbr = new CrawlDbReader();
-        Configuration conf = NutchConfiguration.create();
-        try {
-            System.out.println("Running Nutch Stats Tool!");
-            System.out.println("**********************************");
 
-            dbr.processStatJob("/Users/jasonalexander/Dropbox/development/java/webnipper/crawl/crawldb", conf, true);
+        // Crawl Stats
+       try {
+            CrawlDbReader dbr = new CrawlDbReader();
+            Configuration conf = NutchConfiguration.create();
+            messageHeader("Nutch Stats Tool!");
+            dbr.processStatJob(crawldbPath, conf, true);
 
-           /*
-            CrawlDatum res = dbr.get("/Users/jasonalexander/Dropbox/development/java/webnipper/crawl/crawldb/current", "http://edition.cnn.com/WORLD/", conf);
-            if (res != null) {
-                System.out.println(res);
-            } else {
-                System.out.println("not found");
-            }*/
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-       /*
 
-        //Run Solr Index Tool
+        // Dump Nutch Results
         try {
-            String indexArg = "http://localhost:8983/solr -reindex";
-            System.out.println("Running Solr Index Tool!");
-            System.out.println("**********************************");
-            ToolRunner.run(NutchConfiguration.create(), new SolrIndexer(),
-                    tokenize(indexArg));
+            String dumpArg = "./crawl/linkdb -dump ./rawdumps -format csv";
+            messageHeader("Nutch Dump Tool!");
+            ToolRunner.run(NutchConfiguration.create(), new LinkDbReader(), tokenize(dumpArg));
         } catch (Exception e) {
             e.printStackTrace();
             return;
         }
 
-        // Run Solr Query Tool
-        try {
-            String url = "http://localhost:8983/solr";
-            System.out.println("Running Solr Query Tool!");
-            System.out.println("**********************************");
-            CommonsHttpSolrServer server = new CommonsHttpSolrServer(url);
-            SolrQuery query = new SolrQuery();
-            query.setQuery("content:mycontent"); // Searching mycontent in query
-            query.addSortField("content", SolrQuery.ORDER.asc);
-            QueryResponse rsp;
-            try {
-                rsp = server.query(query);
-            } catch (SolrServerException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-                return;
-            }
-            // Display the results in the console
-            SolrDocumentList docs = rsp.getResults();
-            for (int i = 0; i < docs.size(); i++) {
-                System.out.println(docs.get(i).get("title").toString() + " Link: "
-                        + docs.get(i).get("url").toString());
-            }
-        } catch (Exception e){
-            e.printStackTrace();
-            return;
-        }
-          */
+
 
     }
 
@@ -113,6 +71,12 @@ public class Webnipper {
 
         return tokens;
 
+    }
+
+    public static void messageHeader(String title){
+        System.out.println("**********************************");
+        System.out.println("Running " + title);
+        System.out.println("**********************************");
     }
 
 }
